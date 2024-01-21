@@ -1,0 +1,7 @@
+{
+  "name": "tuubodega-admin-react-ionic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
