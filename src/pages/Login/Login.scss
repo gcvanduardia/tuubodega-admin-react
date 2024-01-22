@@ -1,0 +1,48 @@
+.content-middle {
+    text-align: center;
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.content-center{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.content-end{
+    display: flex;
+    width: 100%;
+    justify-content: end;
+}
+
+ion-card {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 20px;
+}
+
+ion-label{
+    font-weight: bold;
+}
+
+.imgHeader{
+    max-width: 400px;
+    margin: 20px;
+}
+
+.fondo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: url('../../assets/img/fondo1.webp');
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0.3;
+}
