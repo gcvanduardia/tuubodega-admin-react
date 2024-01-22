@@ -58,6 +58,7 @@ const Login: React.FC = () => {
                         </IonCol>
                     </IonRow>
                 </IonGrid>
+                <div>v0.0.1</div>
           </IonContent>
         </IonPage>
     );
