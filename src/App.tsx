@@ -24,6 +24,7 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 
 setupIonicReact();
+const version = 'v0.0.1';
 
 const App: React.FC = () => (
   <IonApp>
@@ -34,6 +35,7 @@ const App: React.FC = () => (
         <Route exact path="/login"> <Login /> </Route>
       </IonRouterOutlet>
     </IonReactRouter>
+    <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px', color: 'rgba(0, 0, 0, 0.5)' }}>{version}</div>
   </IonApp>
 );
 
