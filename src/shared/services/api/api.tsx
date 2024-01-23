@@ -16,7 +16,14 @@ export const login = async (username: string, password: string) => {
           });
         response = apiResponse.data;
     } catch (error: any) {
-        response = error.response.data;
+        if (error.response){
+            response = error.response.data;
+        }else{
+            response = {
+                Error: true,
+                Message: error?.message
+            }
+        }
     }
     return response;
 };
