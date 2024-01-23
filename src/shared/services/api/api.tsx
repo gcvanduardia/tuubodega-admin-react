@@ -4,7 +4,7 @@ import { useIonAlert } from '@ionic/react';
 export const login = async (username: string, password: string) => {
     let response:any = {};
     try {
-        const apiResponse = await axios.post('http://localhost:3000/auth/login',
+        const apiResponse = await axios.post('https://api.tuubodega.com.co/auth/login',
           {
               username: username,
               password: password
