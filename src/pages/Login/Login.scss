@@ -55,3 +55,11 @@ ion-spinner {
     background-size: cover;
     opacity: 0.2;
 }
+
+.show-password{
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 10px;
+    z-index: 100;
+}

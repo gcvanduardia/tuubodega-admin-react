@@ -20,6 +20,7 @@ const Alert: React.FC<AlertProps> = ({ isOpen, header, subHeader, message, butto
       message={message}
       buttons={buttons}
       mode='ios'
+      onKeyDown={e => { if (e.key === 'Enter') onDismiss(); }}
     />
   );
 };

@@ -5,6 +5,9 @@ import Logo from '../../assets/img/logo1.png';
 import { login } from "../../shared/services/api/api";
 import Alert from "../../shared/components/alert/alert";
 import { useIonRouter } from '@ionic/react';
+import { IonIcon } from '@ionic/react';
+import { eye, eyeOff } from 'ionicons/icons';
+import { validation } from "./utils/validations";
 
 const Login: React.FC = () => {
     const router = useIonRouter();
@@ -12,6 +15,9 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState('');
     const [textButton, setTextButton] = useState('Iniciar sesión');
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const { isEmailTouched, isEmailValid, validateEmail, markEmailTouched, emailInputRef, isPasswordValid, validatePassword, markPasswordTouched, isPasswordTouched, passwordInputRef, validationFocus, setValidationFocus } = validation();
+    const [alert, setAlert] = useState({ showAlert: false, alertHeader: '', alertSubHeader: '', alertMessage: '' });
 
     useEffect(() => {
         if (isLoading) {
@@ -21,49 +27,57 @@ const Login: React.FC = () => {
         }
       }, [isLoading]);
     
+    useEffect(() => {
+        if (alert.showAlert) return;
+        if (validationFocus === 'email') {
+          emailInputRef.current?.getInputElement().then((input: any) => input.focus() );
+          return;
+        }
+        if (validationFocus === 'password') {
+          passwordInputRef.current?.getInputElement().then((input: any) => input.focus() );
+          return;
+        }
+      }, [alert.showAlert]);
 
     const handleLogin = async () => {
+        if(isLoading) return;
         console.log(`Intentando iniciar sesión con ${username} y ${password}`);
-        if(isEmailValid === false) return handleAlert('Error', 'Al iniciar sesión', 'Correo electrónico inválido');
+        if(!validations()) return;
         setIsLoading(true);
         const response = await login(username, password);
         setIsLoading(false);
         console.log("response from Login.tsx: ",response);
-        if(response.Error) return handleAlert('Error', 'Al iniciar sesión', response.Message);
+        if(response.Error) return showAlert('Error', 'Al iniciar sesión', response.Message);
         console.log("se logró el login correcto");
         router.push('/home', 'root', 'replace');
         /* router.push('/home', 'forward', 'replace'); */
     };
 
-    const [showAlert, setShowAlert] = useState(false);
-    const [alertHeader, setAlertHeader] = useState('');
-    const [alertSubHeader, setAlertSubHeader] = useState('');
-    const [alertMessage, setAlertMessage] = useState('');
-    const handleAlert = (header: string, subHeader: string, message: string) => {
-        setAlertHeader(header);
-        setAlertSubHeader(subHeader);
-        setAlertMessage(message);
-        setShowAlert(true);
-    };
+    const validations = () => {
+        markEmailTouched();
+        if(isEmailValid === false) {
+            showAlert('Error', 'Al iniciar sesión', 'Correo electrónico inválido');
+            setValidationFocus('email');
+            return false;
+        }
+        markPasswordTouched();
+        if(isPasswordValid === false) {
+            showAlert('Error', 'Al iniciar sesión', 'Contraseña inválida');
+            setValidationFocus('password');
+            return false;
+        }
+        return true;
+    }
 
-    const [isTouched, setIsTouched] = useState(false);
-    const [isEmailValid, setIsEmailValid] = useState<boolean>();
-    const validateEmail = (email: string) => {
-        return email.match(
-          /^(?=.{1,254}$)(?=.{1,64}@)[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
-        );
-    };
-
-    const validate = (ev: Event) => {
-        const value = (ev.target as HTMLInputElement).value;
-        setIsEmailValid(undefined);
-        if (value === '') return;
-        validateEmail(value) !== null ? setIsEmailValid(true) : setIsEmailValid(false);
-    };
-    
-    const markTouched = () => {
-        setIsTouched(true);
-    };
+    const showAlert = (header: string, subHeader: string, message: string) => {
+        setAlert(prevState => ({
+          ...prevState,
+          showAlert: true,
+          alertHeader: header,
+          alertSubHeader: subHeader,
+          alertMessage: message
+        }));
+      };
 
     return (
         <IonPage>
@@ -74,13 +88,14 @@ const Login: React.FC = () => {
                     <IonRow>
                         <IonCol size="12">
                             <div className="content-center">
-                                <IonCard>
+                                <IonCard mode="ios">
                                     <div className="content-center">
                                       <IonImg class="imgHeader" src={Logo} alt={Logo}></IonImg>
                                     </div>
                                     <IonItem lines='none'>
                                         <IonInput
-                                            className={`${isEmailValid && 'ion-valid'} ${isEmailValid === false && 'ion-invalid'} ${isTouched && 'ion-touched'}`}
+                                            ref={emailInputRef}
+                                            className={`${isEmailValid && 'ion-valid'} ${isEmailValid === false && 'ion-invalid'} ${isEmailTouched && 'ion-touched'}`}
                                             label='Correo electrónico'
                                             aria-label='Correo electrónico'
                                             type='email'
@@ -88,31 +103,40 @@ const Login: React.FC = () => {
                                             errorText="Correo electrónico inválido"
                                             value={username}
                                             placeholder="Correo electrónico"
-                                            onIonInput={e => { setUsername(e.detail.value!); validate(e); }}
-                                            onIonBlur={() => markTouched()}
+                                            onIonInput={e => { setUsername(e.detail.value!); validateEmail(e.detail.value!);}}
+                                            onIonBlur={() => markEmailTouched()}
+                                            onKeyDown={e => { if (e.key === 'Enter') handleLogin(); }}
                                         />
                                     </IonItem>
-                                    <IonItem>
+                                    <IonItem lines='none'>
                                         <IonInput
+                                            ref={passwordInputRef}
+                                            className={`${isPasswordValid && 'ion-valid'} ${isPasswordValid === false && 'ion-invalid'} ${isPasswordTouched && 'ion-touched'}`}
                                             label='Contraseña'
                                             aria-label='Contraseña'
                                             labelPlacement='floating'
+                                            errorText='Contraseña inválida'
                                             value={password}
                                             placeholder="Contraseña"
-                                            type="password"
-                                            onIonInput={e => { setPassword(e.detail.value!); }}
+                                            type={showPassword ? "text" : "password"}
+                                            onIonInput={e => { setPassword(e.detail.value!); validatePassword(e.detail.value!);}}
+                                            onIonBlur={() => markPasswordTouched()}
+                                            onKeyDown={e => { if (e.key === 'Enter') handleLogin(); }}
                                         />
+                                        <IonButton slot="end" fill='clear' onClick={() => setShowPassword(!showPassword)} className='show-password'>
+                                            <IonIcon color={showPassword ? 'primary' : 'medium'} size='large' icon={showPassword ? eyeOff : eye}/>
+                                        </IonButton>
                                     </IonItem>
-                                    <IonButton expand="full" onClick={handleLogin} mode='ios' shape='round'>
+                                    <IonButton expand="full" onClick={handleLogin} mode='ios' shape='round' disabled={isLoading}>
                                         {textButton}
                                         {isLoading && <IonSpinner name='dots' slot='end'></IonSpinner>}
                                     </IonButton>
                                     <Alert
-                                      isOpen={showAlert}
-                                      onDismiss={() => setShowAlert(false)}
-                                      header={alertHeader}
-                                      subHeader={alertSubHeader}
-                                      message={alertMessage}
+                                      isOpen={alert.showAlert}
+                                      onDismiss={() => {setAlert(prevState => ({ ...prevState, showAlert: false })); }}
+                                      header={alert.alertHeader}
+                                      subHeader={alert.alertSubHeader}
+                                      message={alert.alertMessage}
                                       buttons={['OK']}
                                     />
                                     <div className="content-end">
