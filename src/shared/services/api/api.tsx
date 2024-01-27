@@ -2,6 +2,29 @@ import axios from 'axios';
 import { useIonAlert } from '@ionic/react';
 import { environment } from "../../../enviroments/enviroment";
 
+export const sesion = async () => {
+    const token = localStorage.getItem('TuuBodega-token');
+    if (!token) return false;
+    try {
+        const apiResponse = await axios.get(`${environment.apiUrl}/auth/sesion`,
+            {
+                headers: {
+                    'x-api-key': environment.apiKey,
+                    'Authorization': token
+                }
+            });
+        console.log("apiResponse from api.tsx: ",apiResponse.data);
+        return true;
+    } catch (error) {
+        console.log("error from api.tsx: ",{
+            Error: true,
+            Message: "no se pudo verificar la sesión",
+            MessageError: error
+        });
+        return false;
+    }
+};
+
 export const login = async (username: string, password: string) => {
     let response:any = {};
     try {

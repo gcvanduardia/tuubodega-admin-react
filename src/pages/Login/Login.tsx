@@ -49,6 +49,8 @@ const Login: React.FC = () => {
         console.log("response from Login.tsx: ",response);
         if(response.Error) return showAlert('Error', 'Al iniciar sesión', response.Message);
         console.log("se logró el login correcto");
+        localStorage.setItem('TuuBodega-token', response.Token);
+        localStorage.setItem('TuuBodega-userId', response.Documento);
         router.push('/home', 'root', 'replace');
         /* router.push('/home', 'forward', 'replace'); */
     };
