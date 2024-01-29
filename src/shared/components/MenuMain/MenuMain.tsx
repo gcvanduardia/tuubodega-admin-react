@@ -77,12 +77,10 @@ const MenuMain: React.FC = () => {
                 <IonMenuToggle>
                     <IonList>
                         {mainMenuArray.map(item => (
-                            <Link to={item.url} key={item.id}>
-                                <IonItem detail={item.detail}>
-                                    <IonIcon icon={item.icon} slot='start'></IonIcon>
-                                    <IonLabel>{item.title}</IonLabel>
-                                </IonItem>
-                            </Link>
+                            <IonItem key={item.id} detail={item.detail} routerLink={item.url}>
+                                <IonIcon icon={item.icon} slot='start'></IonIcon>
+                                <IonLabel> {item.title} </IonLabel>
+                            </IonItem>
                         ))}
                         <IonButton fill="clear" mode="ios" expand='block' onClick={cerrarSesion}>
                             Cerrar Sesión
