@@ -1,10 +1,15 @@
 import axios from 'axios';
-import { useIonAlert } from '@ionic/react';
 import { environment } from "../../../enviroments/enviroment";
 
-export const sesion = async () => {
-    const token = localStorage.getItem('TuuBodega-token');
-    if (!token) return false;
+
+let token: string | null = null;
+let userId: string | null = null;
+export const verifySesion = async () => {
+    const sesion = localStorage.getItem('TuuBodega-sesion');
+    if (!sesion) return false;
+    ({token, userId} = JSON.parse(sesion));
+    console.log("token from api.tsx: ",token);
+    console.log("userId from api.tsx: ",userId);
     try {
         const apiResponse = await axios.get(`${environment.apiUrl}/auth/sesion`,
             {
@@ -39,6 +44,12 @@ export const login = async (username: string, password: string) => {
               }
           });
         response = apiResponse.data;
+        if (!response.Error) {
+            ({ Token: token, Documento: userId } = response);
+            localStorage.setItem('TuuBodega-sesion', JSON.stringify({ token, userId }));
+            console.log("token from api.tsx: ",token);
+            console.log("userId from api.tsx: ",userId);
+        }
     } catch (error: any) {
         if (error.response){
             response = error.response.data;
@@ -51,13 +62,3 @@ export const login = async (username: string, password: string) => {
     }
     return response;
 };
-
-export const alert = async (header: string, subHeader: string, message: string) => {
-    const [presentAlert] = useIonAlert();
-    presentAlert({
-        header: header,
-        subHeader: subHeader,
-        message: message,
-        buttons: ['Action'],
-    })
-}

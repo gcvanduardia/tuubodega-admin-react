@@ -1,0 +1,21 @@
+@import '../../../global.scss';
+
+.like-button {
+    width: 100%;
+    cursor: pointer;
+
+    &:hover {
+        --background: $info-color;
+        background-color: $info-color;
+        color: white;
+    }
+    
+    &:active {
+        --background: $white-color;
+        background-color: $white-color;
+        color: $success-color;
+        box-shadow: 0 5px #666; 
+        transform: translateY(4px); 
+
+    }
+}

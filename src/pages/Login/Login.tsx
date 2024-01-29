@@ -3,7 +3,7 @@ import "./Login.scss";
 import React, { useState, useEffect } from 'react';
 import Logo from '../../assets/img/logo1.png';
 import { login } from "../../shared/services/api/api";
-import Alert from "../../shared/components/alert/alert";
+import Alert from "../../shared/components/Alert/Alert";
 import { useIonRouter } from '@ionic/react';
 import { IonIcon } from '@ionic/react';
 import { eye, eyeOff } from 'ionicons/icons';
@@ -49,9 +49,8 @@ const Login: React.FC = () => {
         console.log("response from Login.tsx: ",response);
         if(response.Error) return showAlert('Error', 'Al iniciar sesión', response.Message);
         console.log("se logró el login correcto");
-        localStorage.setItem('TuuBodega-token', response.Token);
-        localStorage.setItem('TuuBodega-userId', response.Documento);
-        router.push('/home', 'root', 'replace');
+        router.push('/dashboard?title=Dashboard', 'root', 'replace');
+        /* router.push('/dashboard', 'root', 'replace'); */
         /* router.push('/home', 'forward', 'replace'); */
     };
 

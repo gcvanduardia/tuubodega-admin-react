@@ -1,5 +1,6 @@
 import { IonAlert } from '@ionic/react';
 import React from 'react';
+import './Alert.scss';
 
 interface AlertProps {
   isOpen: boolean;
