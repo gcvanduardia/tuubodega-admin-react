@@ -1,10 +1,5 @@
-import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, setupIonicReact, IonContent } from '@ionic/react';
+import { IonApp, setupIonicReact, IonContent } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from './pages/Home/Home';
-import Login from "./pages/Login/Login";
-import Dashboard from "./pages/Dashboard/Dashboard";
-import Operaciones from "./pages/Operaciones/Operaciones";
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -24,6 +19,9 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+
+/* My imports */
+import AppRoutes from "./App.routes";
 import ProtectedRoutes from "./core/Hooks/ProtectedRoutes";
 import HeaderMain from "./shared/components/HeaderMain/HeaderMain";
 
@@ -36,13 +34,7 @@ const App: React.FC = () => (
       <ProtectedRoutes />
       <HeaderMain />
       <IonContent>
-        <IonRouterOutlet>
-          <Route exact path="/login"> <Login /> </Route>
-          <Route exact path="/"> <Redirect to="/dashboard" /> </Route>
-          <Route exact path="/home"> <Home /> </Route>
-          <Route exact path="/dashboard"> <Dashboard /> </Route>
-          <Route exact path="/operaciones"> <Operaciones /> </Route>
-        </IonRouterOutlet>
+        <AppRoutes />
       </IonContent>
     </IonReactRouter>
     <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px', color: 'rgba(0, 0, 0, 0.5)' }}>{version}</div>
