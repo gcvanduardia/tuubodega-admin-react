@@ -1,16 +1,16 @@
 import React from 'react';
 import { IonContent, IonPage, IonText } from '@ionic/react';
-import './Dashboard.scss';
+import './Operaciones.scss';
 
-const Dashboard: React.FC = () => {
+const Operaciones: React.FC = () => {
 
     return (
         <IonPage>
             <IonContent fullscreen>
-                <IonText>Dashborad Works</IonText>
+                <IonText>Operaciones Works</IonText>
             </IonContent>
         </IonPage>
     );
 }
 
-export default Dashboard;
+export default Operaciones;

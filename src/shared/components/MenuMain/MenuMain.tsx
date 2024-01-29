@@ -15,7 +15,7 @@ export const mainMenuArray = [
     {
         id: 2,
         title: 'Operaciones',
-        url: '/home',
+        url: '/operaciones',
         icon: downloadOutline,
         detail: false
     },
