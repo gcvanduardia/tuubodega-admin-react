@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { IonHeader, IonText, IonToolbar, IonButtons, IonMenuButton } from '@ionic/react';
 import './HeaderMain.scss';
 import MenuMain from "../MenuMain/MenuMain";
+import { mainMenuArray } from "../MenuMain/MenuMain";
 import { useLocation } from 'react-router-dom';
 
 const HeaderMain: React.FC = () => {
@@ -9,9 +10,8 @@ const HeaderMain: React.FC = () => {
     const location = useLocation();
 
     useEffect(() => {
-        const queryParams = new URLSearchParams(location.search);
-        const parametro = queryParams.get('title');
-        setTitle(parametro || location.pathname);
+        const menuItem = mainMenuArray.find(item => item.url === location.pathname);
+        setTitle(menuItem?.title || location.pathname);
     }, [location.pathname]);
 
     if (location.pathname === '/login') return null;

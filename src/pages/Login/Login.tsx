@@ -49,7 +49,7 @@ const Login: React.FC = () => {
         console.log("response from Login.tsx: ",response);
         if(response.Error) return showAlert('Error', 'Al iniciar sesión', response.Message);
         console.log("se logró el login correcto");
-        router.push('/dashboard?title=Dashboard', 'root', 'replace');
+        router.push('/dashboard', 'root', 'replace');
         /* router.push('/dashboard', 'root', 'replace'); */
         /* router.push('/home', 'forward', 'replace'); */
     };
