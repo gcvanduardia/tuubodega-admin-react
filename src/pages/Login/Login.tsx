@@ -3,7 +3,7 @@ import "./Login.scss";
 import React, { useState, useEffect } from 'react';
 import Logo from '../../assets/img/logo1.png';
 import { login } from "../../shared/services/api/api";
-import Alert from "../../shared/components/Alert/Alert";
+import Alert from "../../shared/components/AlertMain/AlertMain";
 import { useIonRouter } from '@ionic/react';
 import { IonIcon } from '@ionic/react';
 import { eye, eyeOff } from 'ionicons/icons';
