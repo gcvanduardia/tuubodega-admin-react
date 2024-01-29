@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import { useIonRouter } from '@ionic/react';
 import { verifySesion } from "../../shared/services/api/api";
+import { useLocation } from 'react-router-dom';
 
 const ProtectedRoutes = () => {
     const router = useIonRouter();
+    const location = useLocation();
 
     useEffect(() => {
         const checkAuthentication = async () => {
@@ -16,12 +18,14 @@ const ProtectedRoutes = () => {
         };
 
         checkAuthentication();
-    }, []);
+    }, [location.pathname]);
+
 
     const checkRoutes = (sesion: any) => {
-        const actualRoute = router.routeInfo?.pathname;
+        const actualRoute = location.pathname;
         console.log('actual route: ', actualRoute);
-        if (!sesion) return router.push('/login', 'root', 'replace');
+        console.log('sesion: ', sesion);
+        if (!sesion) return (router.push('/login', 'root', 'replace'));
         if (actualRoute === '/login') return router.push('/dashboard', 'root', 'replace');
     };
 
