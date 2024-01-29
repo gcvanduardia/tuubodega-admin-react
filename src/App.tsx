@@ -27,7 +27,7 @@ import ProtectedRoutes from "./core/Hooks/ProtectedRoutes";
 import HeaderMain from "./shared/components/HeaderMain/HeaderMain";
 
 setupIonicReact();
-const version = 'v0.0.1';
+const version = 'v0.0.2';
 
 const App: React.FC = () => (
   <IonApp>
