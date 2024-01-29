@@ -63,7 +63,8 @@ const MenuMain: React.FC = () => {
 
     const cerrarSesion = () => {
         localStorage.removeItem('TuuBodega-sesion');
-        router.push('/login', 'root', 'replace');
+        /* router.push('/login', 'root', 'replace'); */
+        window.location.reload();
     }
 
     return (
