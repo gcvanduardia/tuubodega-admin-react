@@ -1,56 +1,61 @@
 import React from 'react';
 import { IonContent, IonHeader, IonMenu, IonTitle, IonToolbar, IonMenuToggle, IonButton, IonIcon, IonList, IonItem, IonLabel } from '@ionic/react';
 import { analyticsOutline, downloadOutline, storefrontOutline, peopleOutline, peopleCircleOutline, personOutline, exitOutline } from 'ionicons/icons';
-import { useHistory } from 'react-router-dom';
 import './MenuMain.scss';
 import { useIonRouter } from '@ionic/react';
 
 export const mainMenuArray = [
     {
+        id: 1,
         title: 'Dashboard',
         url: '/dashboard',
-        icon: analyticsOutline
+        icon: analyticsOutline,
+        detail: false
     },
     {
+        id: 2,
         title: 'Operaciones',
         url: '/home',
-        icon: downloadOutline
+        icon: downloadOutline,
+        detail: false
     },
     {
+        id: 3,
         title: 'Productos',
         url: '/productos',
-        icon: storefrontOutline
+        icon: storefrontOutline,
+        detail: false
     },
     {
+        id: 4,
         title: 'Usuarios',
         url: '/usuarios',
-        icon: peopleOutline
+        icon: peopleOutline,
+        detail: false
     },
     {
+        id: 5,
         title: 'Proveedores',
         url: '/proveedores',
-        icon: peopleCircleOutline
+        icon: peopleCircleOutline,
+        detail: false
     },
     {
+        id: 6,
         title: 'Cuenta',
         url: '/cuenta',
-        icon: personOutline
+        icon: personOutline,
+        detail: false
     }
 ];
 
 const MenuMain: React.FC = () => {
 
     const router = useIonRouter();
-    const history = useHistory();
 
     const cerrarSesion = () => {
         localStorage.removeItem('TuuBodega-sesion');
         router.push('/login', 'root', 'replace');
-    }
-
-    const goToPage: any = (e:Event,item: any) => {
-        e.preventDefault();
-        history.push(item.url);
     }
 
     return (
@@ -64,7 +69,7 @@ const MenuMain: React.FC = () => {
                 <IonMenuToggle>
                     <IonList>
                         {mainMenuArray.map(item => (
-                            <IonItem detail={false} key={item.url} onClick={(e) => goToPage(e,item)} className='like-button'>
+                            <IonItem key={item.id} detail={item.detail} routerLink={item.url}>
                                 <IonIcon icon={item.icon} slot='start'></IonIcon>
                                 <IonLabel> {item.title} </IonLabel>
                             </IonItem>
