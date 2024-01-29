@@ -25,8 +25,8 @@ const ProtectedRoutes = () => {
         const actualRoute = location.pathname;
         console.log('actual route: ', actualRoute);
         console.log('sesion: ', sesion);
-        if (!sesion) return (router.push('/login', 'root', 'replace'));
-        if (actualRoute === '/login') return router.push('/dashboard', 'root', 'replace');
+        if (!sesion && actualRoute !== '/login') return (window.location.href = '/login');
+        if (sesion && actualRoute === '/login') return (router.push('/dashboard', 'root', 'replace'));
     };
 
     return null;

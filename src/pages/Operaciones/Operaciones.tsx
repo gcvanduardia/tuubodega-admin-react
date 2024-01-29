@@ -7,7 +7,7 @@ const Operaciones: React.FC = () => {
     return (
         <IonPage>
             <IonContent fullscreen>
-                <IonText>Operaciones Works</IonText>
+                <IonText>Operaciones Works!!!</IonText>
             </IonContent>
         </IonPage>
     );

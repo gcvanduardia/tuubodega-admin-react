@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonContent, IonHeader, IonMenu, IonTitle, IonToolbar, IonMenuToggle, IonButton, IonIcon, IonList, IonItem, IonLabel } from '@ionic/react';
-import { analyticsOutline, downloadOutline, storefrontOutline, peopleOutline, peopleCircleOutline, personOutline, exitOutline } from 'ionicons/icons';
+import { analyticsOutline, downloadOutline, storefrontOutline, peopleOutline, peopleCircleOutline, personOutline, exitOutline, personAddOutline } from 'ionicons/icons';
 import './MenuMain.scss';
 import { useIonRouter } from '@ionic/react';
 
@@ -42,6 +42,13 @@ export const mainMenuArray = [
     },
     {
         id: 6,
+        title: 'Clientes',
+        url: '/clientes',
+        icon: personAddOutline,
+        detail: false
+    },
+    {
+        id: 7,
         title: 'Cuenta',
         url: '/cuenta',
         icon: personOutline,
