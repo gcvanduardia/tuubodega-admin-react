@@ -3,6 +3,7 @@ import { IonContent, IonHeader, IonMenu, IonTitle, IonToolbar, IonMenuToggle, Io
 import { analyticsOutline, downloadOutline, storefrontOutline, peopleOutline, peopleCircleOutline, personOutline, exitOutline, personAddOutline } from 'ionicons/icons';
 import './MenuMain.scss';
 import { useIonRouter } from '@ionic/react';
+import { Link } from 'react-router-dom';
 
 export const mainMenuArray = [
     {
@@ -76,10 +77,12 @@ const MenuMain: React.FC = () => {
                 <IonMenuToggle>
                     <IonList>
                         {mainMenuArray.map(item => (
-                            <IonItem key={item.id} detail={item.detail} routerLink={item.url}>
-                                <IonIcon icon={item.icon} slot='start'></IonIcon>
-                                <IonLabel> {item.title} </IonLabel>
-                            </IonItem>
+                            <Link to={item.url} key={item.id}>
+                                <IonItem detail={item.detail}>
+                                    <IonIcon icon={item.icon} slot='start'></IonIcon>
+                                    <IonLabel>{item.title}</IonLabel>
+                                </IonItem>
+                            </Link>
                         ))}
                         <IonButton fill="clear" mode="ios" expand='block' onClick={cerrarSesion}>
                             Cerrar Sesión
