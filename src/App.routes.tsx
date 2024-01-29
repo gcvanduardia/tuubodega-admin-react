@@ -14,7 +14,7 @@ import Cuenta from './pages/Cuenta/Cuenta';
 const AppRoutes: React.FC = () => {
     return (
         <IonRouterOutlet>
-            <Route exact path="/"> <Redirect to="/dashboard" /> </Route>
+            <Route exact path="/"> <Redirect to="/login" /> </Route>
             <Route exact path="/login"> <Login /> </Route>
             <Route exact path="/dashboard"> <Dashboard /> </Route>
             <Route exact path="/home"> <Home /> </Route>
