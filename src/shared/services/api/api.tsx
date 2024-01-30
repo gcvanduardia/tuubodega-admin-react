@@ -2,8 +2,55 @@ import axios from 'axios';
 import { environment } from "../../../enviroments/enviroment";
 
 
+
+
+
 let token: string | null = null;
 let userId: string | null = null;
+
+
+export const get = async (path: string) => {
+    try {
+        const url = `${environment.apiUrl}/${path}`;
+        console.log("url from api.tsx: ",url);
+        const apiResponse = await axios.get(url,
+            {
+                headers: {
+                    'x-api-key': environment.apiKey,
+                    'Authorization': token
+                }
+            });
+        console.log("apiResponse from api.tsx: ",apiResponse.data);
+        return apiResponse.data;
+    } catch (error: any) {
+        console.log("error from api.tsx: ",error);
+        return {
+            Error: true,
+            Message: error?.message
+        }
+    }
+};
+
+export const post = async (path: string, data: any) => {
+    try {
+        const apiResponse = await axios.post(`${environment.apiUrl}/${path}`,
+            data,
+            {
+                headers: {
+                    'x-api-key': environment.apiKey,
+                    'Authorization': token
+                }
+            });
+        return apiResponse.data;
+    } catch (error: any) {
+        return {
+            Error: true,
+            Message: error?.message
+        }
+    }
+};
+
+
 export const verifySesion = async () => {
     const sesion = localStorage.getItem('TuuBodega-sesion');
     if (!sesion) return false;
