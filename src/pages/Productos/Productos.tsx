@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { IonContent, IonPage, IonGrid, IonRow, IonCol, IonText, IonButton, IonIcon } from '@ionic/react';
-import { chevronBack, chevronForward } from 'ionicons/icons';
+import { IonContent, IonPage, IonGrid, IonRow, IonCol, IonText } from '@ionic/react';
 import './Productos.scss';
 
 import { get } from "../../shared/services/api/api";
 import Table from "../../shared/components/Table/Table";
+import Pager from "../../shared/components/Table/components/Pager/Pager";
 import HeaderSearch from "./components/HeaderSearch/HeaderSearch";
 
 interface Producto {
@@ -31,6 +31,7 @@ const Productos: React.FC = () => {
     const [pageSize, setPageSize] = useState(12);
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(0);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
         getProductos();
@@ -43,19 +44,30 @@ const Productos: React.FC = () => {
         console.log("Pages from Productos.tsx: ", pages);
     }, [Productos]);
 
+
     const getProductos = async (params: string = '') => {
         const response = await get(`articulos/search-admin${params}`);
         if (response) {
             setProductos(response[0]);
+            console.log("*****response[1]: ", response[1]);
+            if (response[1] === undefined) return;
             setResults(response[1][0].Resultados);
             setPageSize(response[1][0].PageZise);
             setPages(Math.ceil(response[1][0].Resultados / response[1][0].PageZise));
         }
     }
 
-    const handleSearch = (searchStr: string) => {
+    const handleSearch = (searchStr: string, pageNumber: number = 1) => {
+        setSearch(searchStr);
         console.log("searchStr desde Productos.tsx: ", searchStr);
-        getProductos(`?search=${searchStr}`);
+        setPage(1);
+        getProductos(`?search=${searchStr}&pageNumber=${pageNumber}`);
+    };
+
+    const handlePage = (page: number) => {
+        console.log("handlePage: ", page);
+        setPage(page);
+        getProductos(`?search=${search}&pageNumber=${page}`);
     };
 
     const irDetalle = (id: number) => {
@@ -116,19 +128,20 @@ const Productos: React.FC = () => {
                     </IonRow>
                 </IonGrid>
             </IonContent>
-            <div className='pager-position'>
+            <Pager page={page} pages={pages} setPage={handlePage}/>
+            {/* <div className='pager-position'>
                 <div className='pager'>
                     <IonButton fill='clear' size='small' shape='round'>
                         <IonIcon slot="icon-only" icon={chevronBack} size='large'></IonIcon>
                     </IonButton>
                     <div className='pager-text'> 
-                    {`${page} de ${pages}`}
+                    {`página ${page} de ${pages}`}
                     </div>
                     <IonButton fill='clear' size='small' shape='round'>
                         <IonIcon slot="icon-only" icon={chevronForward} size='large'></IonIcon>
                     </IonButton>
                 </div>
-            </div>
+            </div> */}
         </IonPage>
     );
 }
