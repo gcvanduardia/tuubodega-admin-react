@@ -39,6 +39,7 @@ const Productos: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        if (articulos.length === 0) return;
         console.log("articulos from Productos.tsx: ", articulos);
         console.log("Results from Productos.tsx: ", results);
         console.log("pageSize from Productos.tsx: ", pageSize);

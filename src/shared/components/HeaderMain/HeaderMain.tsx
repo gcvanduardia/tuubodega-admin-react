@@ -18,6 +18,7 @@ const HeaderMain: React.FC = () => {
     }, [location.pathname]);
 
     useEffect(() => {
+        if (idUser === 0) return;
         console.log("idUser from HeaderMain.tsx: ", idUser);
     }, [idUser]);
 
