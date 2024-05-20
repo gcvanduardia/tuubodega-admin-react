@@ -1,11 +1,9 @@
 import React from 'react';
 
 interface GlobalProps {
-  mainHeaderTitle: string;
-  setMainHeaderTitle: (title: string) => void;
+  idUser: number; setIdUser: (user: number) => void;
 }
 
-export const Global = React.createContext<GlobalProps>({
-  mainHeaderTitle: '',
-  setMainHeaderTitle: () => {},
+export const GlobalContext = React.createContext<GlobalProps>({
+  idUser: 0, setIdUser: () => {}
 });

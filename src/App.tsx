@@ -1,5 +1,7 @@
 import { IonApp, setupIonicReact, IonContent } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
+import React, { useState } from 'react';
+import { GlobalContext } from "./shared/services/global/global";
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -28,17 +30,22 @@ import HeaderMain from "./shared/components/HeaderMain/HeaderMain";
 setupIonicReact();
 const version = 'v0.0.5';
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <ProtectedRoutes />
-      <HeaderMain />
-      <IonContent>
-        <AppRoutes />
-      </IonContent>
-    </IonReactRouter>
-    <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px', color: 'rgba(0, 0, 0, 0.5)' }}>{version}</div>
-  </IonApp>
-);
+const App: React.FC = () => {
+  const [idUser, setIdUser, ] = useState(0);
+  return (
+    <GlobalContext.Provider value={{ idUser, setIdUser}}>
+      <IonApp>
+        <IonReactRouter>
+          <ProtectedRoutes />
+          <HeaderMain />
+          <IonContent>
+            <AppRoutes />
+          </IonContent>
+        </IonReactRouter>
+        <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px', color: 'rgba(0, 0, 0, 0.5)' }}>{version}</div>
+      </IonApp>
+    </GlobalContext.Provider>
+  );
+};
 
 export default App;

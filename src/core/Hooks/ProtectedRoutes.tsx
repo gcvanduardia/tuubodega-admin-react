@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { useIonRouter } from '@ionic/react';
-import { verifySesion } from "../../shared/services/api/api";
+import useApi from '../../shared/services/api/api';
 import { useLocation } from 'react-router-dom';
 
 const ProtectedRoutes = () => {
     const router = useIonRouter();
     const location = useLocation();
+    const { verifySesion } = useApi();
 
     useEffect(() => {
         const checkAuthentication = async () => {

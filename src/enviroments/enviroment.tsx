@@ -10,7 +10,7 @@ const local = {
     apiKey: 'tuubodegaAuth'
 }
 
-const use = production;
+const use = local;
 
 export const environment = {
     production: true,

@@ -1,111 +1,71 @@
-import axios from 'axios';
+import { useContext, useCallback, useEffect, useState } from 'react';
+import axios, { AxiosError } from 'axios';
 import { environment } from "../../../enviroments/enviroment";
+import { GlobalContext } from "../global/global";
 
+const useApi = () => {
+    const { setIdUser} = useContext(GlobalContext);
+    const getJwt = useCallback(() => {
+        const sesion = localStorage.getItem('TuuBodega-sesion');
+        if (!sesion) return null;
+        return JSON.parse(sesion);
+    }, []);
 
-
-
-
-let token: string | null = null;
-let userId: string | null = null;
-
-
-export const get = async (path: string) => {
-    try {
-        const url = `${environment.apiUrl}/${path}`;
-        console.log("url from api.tsx: ",url);
-        const apiResponse = await axios.get(url,
-            {
+    const verifySesion = useCallback(async () => {
+        const jwt = getJwt();
+        if (!jwt) return false;
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: `${environment.apiUrl}/auth/sesion`,
                 headers: {
-                    'x-api-key': environment.apiKey,
-                    'Authorization': token
+                    'Authorization': `Bearer ${jwt}`,
+                    'x-api-key': environment.apiKey
                 }
             });
-        console.log("apiResponse from api.tsx: ",apiResponse.data);
-        return apiResponse.data;
-    } catch (error: any) {
-        console.log("error from api.tsx: ",error);
-        return {
-            Error: true,
-            Message: error?.message
-        }
-    }
-};
-
-export const post = async (path: string, data: any) => {
-    try {
-        const apiResponse = await axios.post(`${environment.apiUrl}/${path}`,
-            data,
-            {
-                headers: {
-                    'x-api-key': environment.apiKey,
-                    'Authorization': token
-                }
-            });
-        return apiResponse.data;
-    } catch (error: any) {
-        return {
-            Error: true,
-            Message: error?.message
-        }
-    }
-};
-
-
-export const verifySesion = async () => {
-    const sesion = localStorage.getItem('TuuBodega-sesion');
-    if (!sesion) return false;
-    ({token, userId} = JSON.parse(sesion));
-    console.log("token from api.tsx: ",token);
-    console.log("userId from api.tsx: ",userId);
-    try {
-        const apiResponse = await axios.get(`${environment.apiUrl}/auth/sesion`,
-            {
-                headers: {
-                    'x-api-key': environment.apiKey,
-                    'Authorization': token
-                }
-            });
-        console.log("apiResponse from api.tsx: ",apiResponse.data);
-        return true;
-    } catch (error) {
-        console.log("error from api.tsx: ",{
-            Error: true,
-            Message: "no se pudo verificar la sesión",
-            MessageError: error
-        });
-        return false;
-    }
-};
-
-export const login = async (username: string, password: string) => {
-    let response:any = {};
-    try {
-        const apiResponse = await axios.post(`${environment.apiUrl}/auth/login`,
-          {
-              username: username,
-              password: password
-          },
-          {
-              headers: {
-                  'x-api-key': environment.apiKey
-              }
-          });
-        response = apiResponse.data;
-        if (!response.Error) {
-            ({ Token: token, Documento: userId } = response);
-            localStorage.setItem('TuuBodega-sesion', JSON.stringify({ token, userId }));
-            console.log("token from api.tsx: ",token);
-            console.log("userId from api.tsx: ",userId);
-        }
-    } catch (error: any) {
-        if (error.response){
-            response = error.response.data;
-        }else{
-            response = {
-                Error: true,
-                Message: error?.message
+            const responseStatus = response.status === 200;
+            if (responseStatus) {
+                console.log("IdUsuario from verifySesion: ", response.data.data.IdUsuario);
+                setIdUser(response.data.data.IdUsuario);
             }
+            return responseStatus;
+        } catch (error) {
+            // handle error
+            console.error('Error al verificar la sesión: ', error);
+            return false;
         }
-    }
-    return response;
+    }, [getJwt, setIdUser]);
+
+    const apiReq = useCallback(async (method: string, url: string, data: object = {}) => {
+        const jwt = getJwt();
+        try {
+            const response = await axios({
+                method: method,
+                url: `${environment.apiUrl}/${url}`,
+                data: data,
+                headers: {
+                    'Authorization': `Bearer ${jwt}`,
+                    'x-api-key': environment.apiKey
+                }
+            });
+            return {
+                data: response.data,
+                status: response.status
+            };
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            if (axiosError.response) {
+                return {
+                    data: axiosError.response.data,
+                    status: axiosError.response.status
+                };
+            }
+            // handle error
+            return null;
+        }
+    }, [getJwt]);
+
+    return { verifySesion, apiReq };
 };
+
+export default useApi;
