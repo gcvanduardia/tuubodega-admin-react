@@ -56,6 +56,15 @@ const Login: React.FC = () => {
     await apiReq('POST', 'auth/loginAdmin', data)
       .then((res:any) => {
         console.log("res from Login.tsx: ", res);
+        if (res.status !== 200) {
+          showAlert('Error', 'Al iniciar sesión', res.data.Message);
+          return;
+        }
+        const jwt = res.data.Token;
+        if (!jwt) {
+          showAlert('Error', 'Al iniciar sesión', 'No se recibió el token de sesión');
+          return;
+        }
         localStorage.setItem('TuuBodega-sesion', JSON.stringify(res.data.Token));
         router.push('/dashboard', 'root', 'replace');
       })
