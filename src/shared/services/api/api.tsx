@@ -8,8 +8,7 @@ const useApi = () => {
     const getJwt = useCallback(() => {
         const sesion = localStorage.getItem('TuuBodega-sesion');
         if (!sesion) return null;
-        /* return JSON.parse(sesion); */
-        return sesion;
+        return JSON.parse(sesion);
     }, []);
 
     const verifySesion = useCallback(async () => {
