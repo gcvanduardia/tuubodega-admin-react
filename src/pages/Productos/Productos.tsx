@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { IonContent, IonPage, IonGrid, IonRow, IonCol, IonText } from '@ionic/react';
 import './Productos.scss';
 
-import { get } from "../../shared/services/api/api";
+import useApi from '../../shared/services/api/api';
 import Table from "../../shared/components/Table/Table";
 import Pager from "../../shared/components/Table/components/Pager/Pager";
 import HeaderSearch from "./components/HeaderSearch/HeaderSearch";
@@ -26,7 +26,8 @@ interface Column {
 
 const Productos: React.FC = () => {
 
-    const [productos, setProductos] = useState([]);
+    const { apiReq } = useApi();
+    const [articulos, setArticulos] = useState([]);
     const [results, setResults] = useState(0);
     const [pageSize, setPageSize] = useState(12);
     const [page, setPage] = useState(1);
@@ -38,24 +39,30 @@ const Productos: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        console.log("Productos from Productos.tsx: ", Productos);
+        console.log("articulos from Productos.tsx: ", articulos);
         console.log("Results from Productos.tsx: ", results);
         console.log("pageSize from Productos.tsx: ", pageSize);
         console.log("Pages from Productos.tsx: ", pages);
-    }, [Productos]);
+    }, [articulos]);
 
 
     const getProductos = async (params: string = '') => {
-        const response = await get(`articulos/search-admin${params}`);
-        if (response) {
-            setProductos(response[0]);
-            console.log("*****response[1]: ", response[1]);
-            if (response[1] === undefined) return;
-            setResults(response[1][0].Resultados);
-            setPageSize(response[1][0].PageZise);
-            setPages(Math.ceil(response[1][0].Resultados / response[1][0].PageZise));
-        }
-    }
+        apiReq('GET', `articulos/search-admin${params}`)
+            .then((response: any) => {
+                if (response) {
+                    const data = response.data;
+                    setArticulos(data[0]);
+                    console.log("*****data[1]: ", data[1]);
+                    if (data[1] === undefined) return;
+                    setResults(data[1][0].Resultados);
+                    setPageSize(data[1][0].PageZise);
+                    setPages(Math.ceil(data[1][0].Resultados / data[1][0].PageZise));
+                }
+            })
+            .catch((error: any) => {
+                console.error('Error al obtener los productos', error);
+            });
+    };
 
     const handleSearch = (searchStr: string, pageNumber: number = 1) => {
         setSearch(searchStr);
@@ -103,7 +110,7 @@ const Productos: React.FC = () => {
                 )
             },
             {
-                Header: () => (<div>Enable<br/><div className='header-enable'>(Prod-Cat-Prov)</div></div>),
+                Header: () => (<div>Enable<br /><div className='header-enable'>(Prod-Cat-Prov)</div></div>),
                 accessor: 'ArticuloEn' as keyof Producto,
                 Cell: ({ row: { original } }: { row: { original: Producto } }) => (
                     <div className='table-aling-center'>
@@ -123,25 +130,12 @@ const Productos: React.FC = () => {
                     <IonRow>
                         <IonCol size="12">
                             <IonText className='text-productos'>{results} productos</IonText>
-                            <Table columns={columns} data={productos}></Table>
+                            <Table columns={columns} data={articulos}></Table>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
             </IonContent>
-            <Pager page={page} pages={pages} setPage={handlePage}/>
-            {/* <div className='pager-position'>
-                <div className='pager'>
-                    <IonButton fill='clear' size='small' shape='round'>
-                        <IonIcon slot="icon-only" icon={chevronBack} size='large'></IonIcon>
-                    </IonButton>
-                    <div className='pager-text'> 
-                    {`página ${page} de ${pages}`}
-                    </div>
-                    <IonButton fill='clear' size='small' shape='round'>
-                        <IonIcon slot="icon-only" icon={chevronForward} size='large'></IonIcon>
-                    </IonButton>
-                </div>
-            </div> */}
+            <Pager page={page} pages={pages} setPage={handlePage} />
         </IonPage>
     );
 }
