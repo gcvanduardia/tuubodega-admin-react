@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
 import { IonCol, IonContent, IonGrid, IonPage, IonRow } from '@ionic/react';
+import HeaderSearch from './components/HeaderSearch/HeaderSearch';
 import Table from "../../shared/components/Table/Table";
 import useApi from '../../shared/services/api/api';
 import './Operaciones.scss';
 
 interface Transaction {
+    NombreCompleto: string;
+    Documento: string;
     IdTransaccion: string;
     Valor: number;
     Referencia: string;
@@ -25,7 +28,11 @@ const Operaciones: React.FC = () => {
     const { apiReq } = useApi();
     const columns: Column[] = React.useMemo(
         () => [
+            { Header: 'Nombre', accessor: 'NombreCompleto' },
+            { Header: 'Documento', accessor: 'Documento' },
             { Header: 'ID Transacción', accessor: 'IdTransaccion' },
+            { Header: 'Referencia', accessor: 'Referencia' },
+            { Header: 'Estado', accessor: 'Estado' },
             {
                 Header: 'Valor',
                 accessor: 'Valor' as keyof Transaction,
@@ -35,10 +42,8 @@ const Operaciones: React.FC = () => {
                     </div>
                 )
             },
-            { Header: 'Referencia', accessor: 'Referencia' },
             { Header: 'Moneda', accessor: 'Moneda' },
             { Header: 'Metodo de Pago', accessor: 'MetodoPago' },
-            { Header: 'Estado', accessor: 'Estado' },
             {
                 Header: 'Fecha de Envío',
                 accessor: 'FechaEnvio',
@@ -60,6 +65,7 @@ const Operaciones: React.FC = () => {
         ], []
     );
     const [transactions, setTransactions] = React.useState<Transaction[]>([]);
+    const [searchedTransactions, setSearchedTransactions] = React.useState<Transaction[]>([]);
 
     useEffect(() => {
         getTransactions();
@@ -71,6 +77,7 @@ const Operaciones: React.FC = () => {
                 if (response) {
                     const data = (Array.isArray(response.data) && response.data?.length) ? response.data : [];
                     setTransactions(data);
+                    setSearchedTransactions(data);
                 }
             })
             .catch((error: any) => {
@@ -78,13 +85,23 @@ const Operaciones: React.FC = () => {
             });
     };
 
+    const handleSearch = (searchStr: string) => {
+        if (!searchStr) return setSearchedTransactions(transactions);
+        setSearchedTransactions(transactions.filter(transaction => (
+            transaction.NombreCompleto?.toLowerCase().includes(searchStr.toLowerCase()) ||
+            transaction.Documento?.includes(searchStr) ||
+            transaction.IdTransaccion == searchStr
+        )))
+    };
+
     return (
         <IonPage>
+            <HeaderSearch onSearch={handleSearch} />
             <IonContent fullscreen>
                 <IonGrid fixed>
                     <IonRow>
                         <IonCol size="12">
-                            <Table columns={columns} data={transactions}></Table>
+                            <Table columns={columns} data={searchedTransactions}></Table>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
