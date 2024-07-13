@@ -49,7 +49,10 @@ const Operaciones: React.FC = () => {
                 accessor: 'FechaEnvio',
                 Cell: ({ value }: { value: string }) => (
                     <div>
-                        {Date.parse(value) ? new Date(value).toLocaleDateString() : value}
+                        {Date.parse(value) ? new Date(value).toLocaleString('es', {
+                            year: 'numeric', month: '2-digit', day: '2-digit', 
+                            hour: '2-digit', minute: '2-digit', hour12: false
+                        }) : value}
                     </div>
                 )
             },
@@ -58,7 +61,10 @@ const Operaciones: React.FC = () => {
                 accessor: 'FechaCreacion',
                 Cell: ({ value }: { value: string }) => (
                     <div>
-                        {Date.parse(value) ? new Date(value).toLocaleDateString() : value}
+                        {Date.parse(value) ? new Date(value).toLocaleString('es', {
+                            year: 'numeric', month: '2-digit', day: '2-digit',
+                            hour: '2-digit', minute: '2-digit', hour12: false
+                        }) : value}
                     </div>
                 )
             }
